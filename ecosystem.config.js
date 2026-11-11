@@ -6,7 +6,7 @@ module.exports = {
     {
       name: "pii-redaction",
       script: "serve.py",
-      // Linux venv (recreate on EC2: python3 -m venv pii_env && pii_env/bin/pip install -r requirements.txt)
+      // Linux venv on EC2 (python3.12): python3 -m venv venv && venv/bin/pip install -r requirements.txt
       interpreter: "./venv/bin/python",
       cwd: __dirname,
       env: {

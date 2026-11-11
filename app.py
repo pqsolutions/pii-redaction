@@ -3589,7 +3589,7 @@ def _run_pipeline(process_id: str, filenames: list, file_id_to_log_id: dict = No
     file_id_to_log_id = file_id_to_log_id or {}
     q = _job_queues[process_id]
     venv_python = BASE_DIR / "pii_env" / "Scripts" / "python.exe"
-    python = str(venv_python) if venv_python.exists() else sys.executable
+    python = str(venv_python) if (os.name == "nt" and venv_python.exists()) else sys.executable
     script = str(BASE_DIR / "dual_redaction_pipeline.py")
 
     q.put(("log", f"[INFO] Python : {python}"))
@@ -3941,7 +3941,7 @@ def rehydrate_file():
         return jsonify({"error": f"Unknown file_id: {file_id}"}), 404
 
     venv_python = BASE_DIR / "pii_env" / "Scripts" / "python.exe"
-    python = str(venv_python) if venv_python.exists() else sys.executable
+    python = str(venv_python) if (os.name == "nt" and venv_python.exists()) else sys.executable
     script = str(BASE_DIR / "dual_redaction_pipeline.py")
 
     env = os.environ.copy()
