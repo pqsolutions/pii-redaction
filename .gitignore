@@ -1,0 +1,39 @@
+# Virtual environment
+pii_env/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Runtime data — uploaded/processed client files, never commit real PII
+files/
+unmasked/
+secrets/
+audit/
+
+# Logs
+*.log
+
+# Environment / secrets config
+.env
+
+# Editor / OS
+.vscode/
+.idea/
+Thumbs.db
+
+
+# Test documents may be real client files — keep them local
+tests/*.pdf
+tests/*.docx
+tests/*.doc
+tests/*.xlsx
+tests/*.xls
+tests/*.pptx
+tests/*.png
+tests/*.jpg
+tests/*.jpeg

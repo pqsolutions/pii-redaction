@@ -1,0 +1,54 @@
+tags:
+  - Reference Data
+summary: List processes for a client + job
+description: >
+  Process Name picker for the rehydrate page, scoped to one client and job.
+  Requires the browser session (see `uid` on `GET /`) or a valid X-API-Key
+  header (server-to-server).
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/json
+parameters:
+  - name: client_id
+    in: query
+    type: integer
+    required: true
+  - name: job_id
+    in: query
+    type: integer
+    required: true
+responses:
+  200:
+    description: Array of processes
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          process_id: {type: string}
+          process_name: {type: string}
+  400:
+    description: client_id and job_id are required
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Failed to load processes
+    schema:
+      type: object
+      properties:
+        error: {type: string}

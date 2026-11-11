@@ -1,0 +1,74 @@
+tags:
+  - Redaction Map
+summary: Edit a manually-added redaction row
+description: >
+  Restores the row's old value, then re-masks it under the new
+  source_text/category. Only rows with source "manual" can be edited.
+  Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: row_id
+    in: path
+    type: integer
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required: [source_text, category]
+      properties:
+        source_text: {type: string}
+        category: {type: string}
+responses:
+  200:
+    description: Updated rows and preview
+    schema:
+      type: object
+      properties:
+        rows:
+          type: array
+          items: {type: object}
+        preview: {type: object}
+        redacted_filename: {type: string}
+  400:
+    description: Missing fields, or new value not found in the document
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized (no session uid and no API key), or row is not manually-added
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown row or unknown file for this row
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  409:
+    description: Value already masked
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Restore or masking failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

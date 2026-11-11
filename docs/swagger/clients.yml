@@ -1,0 +1,23 @@
+tags:
+  - Reference Data
+summary: List clients
+description: Returns all clients available for the upload/rehydrate pickers.
+produces:
+  - application/json
+responses:
+  200:
+    description: Array of clients
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id: {type: integer}
+          name: {type: string}
+          short_name: {type: string}
+  500:
+    description: Failed to load clients
+    schema:
+      type: object
+      properties:
+        error: {type: string}

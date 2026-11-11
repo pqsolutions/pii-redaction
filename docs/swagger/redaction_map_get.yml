@@ -1,0 +1,51 @@
+tags:
+  - Redaction Map
+summary: Get the redaction map for a process
+description: >
+  Returns every file in the process along with its redaction rows. Requires
+  the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/json
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: Files and their redaction rows
+    schema:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              file_id: {type: string}
+              filename: {type: string}
+              redacted_filename: {type: string}
+              output_format: {type: string}
+              rows:
+                type: array
+                items: {type: object}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown process_id
+    schema:
+      type: object
+      properties:
+        error: {type: string}

@@ -1,0 +1,44 @@
+tags:
+  - Upload
+summary: Cancel an in-progress batch
+description: >
+  Marks every not-yet-completed PII_redation_upload_log row for this
+  process_id as cancelled. dual_redaction_pipeline.py's main() processing
+  loop checks this before starting each remaining file in the batch and
+  stops early once set — cooperative, not a hard kill: whichever file is
+  already mid-processing still finishes normally.
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: Number of rows marked cancelled
+    schema:
+      type: object
+      properties:
+        process_id: {type: string}
+        cancelled_rows: {type: integer}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Failed to cancel batch
+    schema:
+      type: object
+      properties:
+        error: {type: string}

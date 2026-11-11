@@ -1,0 +1,15 @@
+# Dependencies for PII Redaction Pipeline
+docling
+pyyaml
+requests
+presidio-analyzer
+gliner
+pillow
+pandas
+opencv-python
+pytesseract
+numpy
+pymupdf
+beautifulsoup4
+openpyxl
+httpx

@@ -1,0 +1,65 @@
+tags:
+  - Rehydrate
+summary: Rehydrate an uploaded derived document against a process's token map
+description: >
+  Restores original values inside an uploaded document (e.g. a draft
+  prepared from several redacted source files) by matching tokens from the
+  given process's redaction map. Images are not supported (no searchable
+  text layer once pixel-redacted). If some tokens conflict across files in
+  the process, the response includes an `X-Rehydrate-Warnings` header
+  (URL-encoded JSON) alongside the file. Requires the browser session or a
+  valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+consumes:
+  - multipart/form-data
+produces:
+  - application/octet-stream
+  - application/json
+parameters:
+  - name: process_id
+    in: formData
+    type: string
+    required: true
+  - name: file
+    in: formData
+    type: file
+    required: true
+    description: The derived document to rehydrate. Images are rejected.
+responses:
+  200:
+    description: The rehydrated file (may include X-Rehydrate-Warnings header)
+    headers:
+      X-Rehydrate-Warnings:
+        type: string
+        description: URL-encoded JSON `{matched, conflicts}` when some tokens conflicted.
+  400:
+    description: Missing fields, unsupported/image file type, or no tokens matched
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown process_id
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Rehydration failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

@@ -1,0 +1,39 @@
+tags:
+  - Upload
+summary: Download a redacted output file by file_id
+description: >
+  Unlike GET /download/{filename} (looked up by on-disk filename, which can
+  collide if two different files share the same original name), this route
+  identifies the file by its unique file_id — the same identifier returned
+  by POST /upload's `files` list and GET /api/redaction-map/{process_id}.
+  Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/octet-stream
+parameters:
+  - name: file_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: The redacted file
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown file_id, or redacted output not found on disk
+    schema:
+      type: object
+      properties:
+        error: {type: string}

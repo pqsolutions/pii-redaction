@@ -1,0 +1,18 @@
+tags:
+  - Pages
+summary: Main redaction UI page
+description: >
+  Renders the single-page app shell. If a `uid` query parameter is present
+  (an encrypted user id from the SSO link), it is decrypted and stored in
+  the session to gate the authenticated endpoints below.
+parameters:
+  - name: uid
+    in: query
+    type: string
+    required: false
+    description: Encrypted user id issued by the SSO flow.
+produces:
+  - text/html
+responses:
+  200:
+    description: HTML page

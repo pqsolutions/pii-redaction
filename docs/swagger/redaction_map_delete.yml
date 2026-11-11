@@ -1,0 +1,48 @@
+tags:
+  - Redaction Map
+summary: Delete a redaction row and restore its original value
+description: Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/json
+parameters:
+  - name: row_id
+    in: path
+    type: integer
+    required: true
+responses:
+  200:
+    description: Updated rows and preview
+    schema:
+      type: object
+      properties:
+        rows:
+          type: array
+          items: {type: object}
+        preview: {type: object}
+        redacted_filename: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown row or unknown file for this row
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Restore failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

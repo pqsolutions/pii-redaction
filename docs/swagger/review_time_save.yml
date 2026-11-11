@@ -1,0 +1,71 @@
+tags:
+  - Review Time
+summary: Save the review time for a batch
+description: >
+  Called by the results screen on every Download click. Upserts one
+  pii_process_review_time row per batch per user. Totals only ever grow, so an
+  out-of-order request can't lower them; download_count is incremented and
+  system_seconds is refreshed from PII_redation_upload_log. Idle time
+  (no input for REVIEW_IDLE_SECONDS) and tab-hidden time are excluded from
+  active_seconds and logged separately. Each value is capped at 24 hours.
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        active_seconds: {type: integer, description: Review time excluding idle and tab-hidden time}
+        idle_seconds: {type: integer, description: Time paused for inactivity}
+        tab_hidden_seconds: {type: integer, description: Time paused while the tab was hidden}
+        idle_pauses: {type: integer}
+        tab_pauses: {type: integer}
+        wall_seconds: {type: integer, description: Seconds since the timer started in this page load; back-dates started_at on first save}
+responses:
+  200:
+    description: Saved row
+    schema:
+      type: object
+      properties:
+        process_id: {type: string}
+        review: {type: object}
+  400:
+    description: Invalid body, or no uid known for this caller
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized, or client not permitted for this user
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown process_id
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Failed to save review time
+    schema:
+      type: object
+      properties:
+        error: {type: string}

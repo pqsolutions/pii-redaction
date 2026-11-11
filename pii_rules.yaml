@@ -1,0 +1,95 @@
+GLOBAL_RULES: |
+  - Never redact government bodies (ATO, ASIC, Medicare, Centrelink, Services Australia).
+  - Never redact standard form labels or headings (Date:, Total:, Signature:, Employer's name, Your client, Tax return Individuals, Income Tax).
+  - Never redact generic dates (financial year, statement period).
+  - Never redact $0.00 zero dollar amounts.
+  - If in doubt, REDACT. Over-redacting wastes a minute, under-redacting is a data breach.
+
+PERSON_RULES: |
+  - REDACT full names (First + Last, including preferred or previous names).
+  - REDACT names of spouses, dependents, next of kin, and power of attorney.
+  - SKIP single generic given names (e.g., "Michael") unless the context strongly implies a specific client.
+  - SKIP historical figures, author credits, or public officer titles.
+
+ORGANIZATION_RULES: |
+  - SKIP ASX-listed public companies (e.g., Commonwealth Bank, NAB) UNLESS they are paired with a specific personal account number.
+  - REDACT proprietary private companies (Pty Ltd) or Trust names if linked to an individual (e.g., as settlor, trustee, or employee).
+  - REDACT employer names or health funds ONLY IF they appear next to an individual's job title, workplace address, or member number.
+
+FINANCIAL_RULES: |
+  - DO NOT redact any financial status or financial amounts.
+  - SKIP all generic amounts, general transaction amounts, price tags, public tender amounts, or zero balances ($0.00).
+
+ALLOWLIST:
+  - "Australian Taxation Office"
+  - "ATO"
+  - "ASIC"
+  - "Services Australia"
+  - "Medicare"
+  - "Employer's name"
+  - "Your client"
+  - "Tax return Individuals"
+  - "Income Tax"
+  - "Item 1"
+  - "Commonwealth Bank"
+  - "Bendigo and Adelaide Bank"
+  - "NAB"
+  - "Westpac"
+  - "ANZ"
+STRUCTURAL_SETTINGS:
+  max_lookahead: 5
+
+STRUCTURAL_LABELS:
+  PERSON:
+    - "given names"
+    - "given name"
+    - "family name"
+    - "family name and suffix"
+    - "surname"
+    - "full name"
+    - "name of applicant"
+    - "client"
+  DATE:
+    - "date of birth"
+    - "dob"
+    - "birth date"
+  ADDRESS:
+    - "postal address"
+    - "residential address"
+    - "street address"
+    - "home address"
+  COMPANY:
+    - "employer"
+    - "health fund"
+  REF_NUMBER:
+    - "client reference"
+    - "client ref"
+    - "client reference number"
+    - "client ref number"
+    - "agent reference"
+    - "agent ref"
+    - "agent reference number"
+    - "agent ref number"
+    - "reference number"
+    - "reference no"
+    - "ref number"
+    - "ref no"
+  ACCOUNT_NUMBER:
+    - "account number"
+    - "account no"
+  MEDICARE:
+    - "medicare number"
+    - "medicare membership number"
+    - "membership number"
+    - "member number"
+
+TIER_1_REGEX:
+  CREDIT_CARD: '\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})\b'
+  TFN: '\b\d{3}[ -]?\d{3}[ -]?\d{3}\b'
+  ABN: '\b\d{2}[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}\b'
+  EMAIL: '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+  PHONE: '\b(?:\+?61|0)[2-478](?:[ -]?[0-9]){8}\b'
+  MEDICARE: '\b\d{4}\s?\d{5}\s?\d{1}(?:\s?\d{1})?\b'
+  BSB_ACCOUNT: '\b\d{3}[-\s]\d{3}\s+\d{6,10}\b'
+  ACCOUNT_NUMBER: '(?:Account)\s*(?:Number|No\.?|#)\s*[:#]?\s*\d{6,10}\b'
+  REF_NUMBER: '(?:Client\s*(?:Reference|Ref)(?:\s*(?:Number|No\.?))?|Agent\s*(?:Reference|Ref)(?:\s*(?:Number|No\.?))?|Reference\s*(?:Number|No\.?)|Transaction\s*(?:ID|Reference|Number|No\.?)|Invoice\s*(?:ID|Number|No\.?)|Investment\s*(?:Reference|Ref)(?:\s*(?:Number|No\.?))?|Policy\s*(?:Number|No\.?))\s*[:#.\s]?\s*[\w\-]*\d[\w\-]*(?:\s+[\w\-]{1,10}){0,3}'

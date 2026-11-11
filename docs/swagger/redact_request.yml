@@ -1,0 +1,82 @@
+tags:
+  - Redact API
+summary: Bulk-redact caller-supplied PII values across already-uploaded files
+description: >
+  For each file (already uploaded via POST /upload and already through the
+  redaction pipeline), masks every listed source_values string wherever it
+  is found — exact, whole-word, case-insensitive matches only, no automated
+  PII detection. Category is auto-detected per value (structured
+  identifiers like TFN/ABN/email/phone get their matching category; free
+  text falls back to a generic "PII" category). Processing runs
+  asynchronously in a background thread; this call returns immediately with
+  a stream_url to follow progress and the final result via
+  GET /stream/redact/{process_id}. Requires the browser session or a valid
+  X-API-Key header (server-to-server). See
+  wiki/feature-updates/phase-1/plan-api-redaction-implementation.md.
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required: [process_id, files]
+      properties:
+        process_id:
+          type: string
+          description: An existing process_id, as returned by POST /upload.
+        files:
+          type: array
+          items:
+            type: object
+            required: [file_id, source_values]
+            properties:
+              file_id:
+                type: string
+                description: An existing file_id, as returned by POST /upload.
+              file_name:
+                type: string
+                description: Echoed back in the response only — not used for lookup.
+              source_values:
+                type: array
+                items: {type: string}
+      example:
+        process_id: PRC-AC6-000122
+        files:
+          - file_id: FIL-AC6-100133
+            file_name: WP file 01.pdf
+            source_values: [John, kumar, Covid-19]
+          - file_id: FIL-AC6-100134
+            file_name: WP file 01.xlsx
+            source_values: [kumar, Covid-19]
+responses:
+  202:
+    description: Processing started
+    schema:
+      type: object
+      properties:
+        process_id: {type: string}
+        stream_url: {type: string}
+  400:
+    description: Missing or invalid request shape
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}

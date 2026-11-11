@@ -1,0 +1,79 @@
+tags:
+  - Upload
+summary: Upload files and start the redaction pipeline
+description: >
+  Saves the uploaded files, records them against a client/job/process, and
+  kicks off the redaction pipeline in a background thread. Progress for the
+  returned `job_id` can be followed via `GET /stream/{job_id}`. No credential
+  is required (unchanged, browser flow). A server-to-server caller may
+  optionally send an X-API-Key header — if present it must be valid (401 if
+  not) — together with a `uid` form field, so the upload gets logged under
+  that uid the same way a browser-session upload would be.
+security:
+  - {}
+  - ApiKeyAuth: []
+consumes:
+  - multipart/form-data
+produces:
+  - application/json
+parameters:
+  - name: files
+    in: formData
+    type: file
+    required: true
+    description: One or more files to redact. Allowed types - pdf, xlsx, xls, docx, doc, png, jpg, jpeg.
+  - name: process_name
+    in: formData
+    type: string
+    required: true
+  - name: client_id
+    in: formData
+    type: integer
+    required: true
+  - name: job_id
+    in: formData
+    type: integer
+    required: true
+  - name: output_format
+    in: formData
+    type: string
+    required: false
+    enum: [excel, as_is]
+    default: excel
+  - name: uid
+    in: formData
+    type: integer
+    required: false
+    description: >
+      Only used when authenticating via X-API-Key (no browser session to
+      derive a uid from) — attributes this upload to that internal user id
+      in PII_redation_upload_log. Ignored otherwise.
+responses:
+  200:
+    description: Pipeline started
+    schema:
+      type: object
+      properties:
+        job_id: {type: string}
+        saved:
+          type: array
+          items: {type: string}
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              filename: {type: string}
+              file_id: {type: string}
+  400:
+    description: Missing/invalid fields, unknown client or job, or unsupported file type
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: X-API-Key header present but invalid
+    schema:
+      type: object
+      properties:
+        error: {type: string}

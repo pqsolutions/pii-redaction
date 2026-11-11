@@ -1,0 +1,52 @@
+tags:
+  - Rehydrate
+summary: Rehydrate a previously redacted file back to its original values
+description: >
+  Runs the pipeline's unmask step for a single file_id and returns the
+  restored file. Requires the browser session or a valid X-API-Key header
+  (server-to-server).
+security:
+  - ApiKeyAuth: []
+consumes:
+  - multipart/form-data
+produces:
+  - application/octet-stream
+  - application/json
+parameters:
+  - name: file_id
+    in: formData
+    type: string
+    required: true
+responses:
+  200:
+    description: The rehydrated (unmasked) file
+  400:
+    description: file_id is required
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown file_id
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Rehydration timed out or failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

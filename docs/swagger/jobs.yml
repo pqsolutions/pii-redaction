@@ -1,0 +1,39 @@
+tags:
+  - Reference Data
+summary: Search jobs for a client
+description: Returns jobs belonging to a client, optionally filtered by a search string.
+produces:
+  - application/json
+parameters:
+  - name: client_id
+    in: query
+    type: integer
+    required: true
+  - name: q
+    in: query
+    type: string
+    required: false
+    description: Free-text search filter.
+responses:
+  200:
+    description: Array of jobs
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id: {type: integer}
+          pid: {type: integer}
+          description: {type: string}
+  400:
+    description: client_id required
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Failed to search jobs
+    schema:
+      type: object
+      properties:
+        error: {type: string}

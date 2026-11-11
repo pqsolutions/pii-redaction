@@ -1,0 +1,69 @@
+tags:
+  - Redaction Map
+summary: OCR a region of the preview
+description: >
+  Fallback for the preview's marquee selection tool — OCRs just the
+  rectangle the user drew, used when no pre-extracted word falls under it.
+  Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: file_id
+    in: path
+    type: string
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required: [x0, y0, x1, y1]
+      properties:
+        x0: {type: number}
+        y0: {type: number}
+        x1: {type: number}
+        y1: {type: number}
+        page:
+          type: integer
+          description: Page number, for multi-page documents.
+responses:
+  200:
+    description: OCR result
+    schema:
+      type: object
+      properties:
+        text: {type: string}
+  400:
+    description: x0, y0, x1, y1 are required numbers
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown file_id or redacted output not found on disk
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: OCR failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

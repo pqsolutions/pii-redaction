@@ -1,0 +1,42 @@
+tags:
+  - Redaction Map
+summary: Render a preview of a redacted file
+description: Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/json
+parameters:
+  - name: file_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: Preview payload (page images/words, per redaction_formats.render_preview)
+    schema:
+      type: object
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown file_id or redacted output not found on disk
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Preview failed
+    schema:
+      type: object
+      properties:
+        error: {type: string}

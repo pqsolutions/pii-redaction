@@ -1,0 +1,71 @@
+tags:
+  - Review Time
+summary: Get system time and saved review time for a batch
+description: >
+  Returns the pipeline (system) time for the batch, computed from
+  PII_redation_upload_log (MIN(uploaded_at) to MAX(completed_on); null while any
+  file is still pending or when the batch has no log rows), plus the review
+  time this user has already saved for it (null if none). The results screen's
+  timer pill starts from these values. Requires the browser session (see
+  `uid` on `GET /`) or a valid X-API-Key header with a `uid` query parameter.
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/json
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: System time and saved review time
+    schema:
+      type: object
+      properties:
+        process_id: {type: string}
+        idle_threshold_seconds: {type: integer}
+        system_seconds: {type: integer}
+        review:
+          type: object
+          properties:
+            active_seconds: {type: integer}
+            idle_seconds: {type: integer}
+            tab_hidden_seconds: {type: integer}
+            idle_pause_count: {type: integer}
+            tab_pause_count: {type: integer}
+            idle_threshold_seconds: {type: integer}
+            system_seconds: {type: integer}
+            download_count: {type: integer}
+            started_at: {type: string}
+            last_download_at: {type: string}
+  400:
+    description: No uid known for this caller
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized, or client not permitted for this user
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown process_id
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  500:
+    description: Failed to load review time
+    schema:
+      type: object
+      properties:
+        error: {type: string}

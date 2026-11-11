@@ -1,0 +1,39 @@
+tags:
+  - Upload
+summary: Download a zipped compliance package for one process
+description: >
+  Bundles every redacted output file for a process (batch), plus each file's
+  per-file audit log spreadsheet if one exists on disk, into a single
+  downloadable .zip — so a compliance export doesn't require manually
+  collecting files from the redacted output and audit folders. Same auth gate
+  as GET /download/id/{file_id}; no separate access-control layer.
+security:
+  - ApiKeyAuth: []
+produces:
+  - application/zip
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+responses:
+  200:
+    description: The compliance package zip
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  404:
+    description: Unknown process_id, or no redacted outputs/audit logs found on disk
+    schema:
+      type: object
+      properties:
+        error: {type: string}

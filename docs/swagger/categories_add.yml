@@ -1,0 +1,47 @@
+tags:
+  - Categories
+summary: Add a redaction category
+description: Requires the browser session or a valid X-API-Key header (server-to-server).
+security:
+  - ApiKeyAuth: []
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string}
+responses:
+  200:
+    description: Normalized category name and full updated list
+    schema:
+      type: object
+      properties:
+        name: {type: string}
+        categories:
+          type: array
+          items: {type: string}
+  400:
+    description: name is required, or invalid category
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  401:
+    description: Invalid API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}
+  403:
+    description: Not authorized — no session uid and no API key
+    schema:
+      type: object
+      properties:
+        error: {type: string}

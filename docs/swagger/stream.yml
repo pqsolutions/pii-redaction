@@ -1,0 +1,20 @@
+tags:
+  - Upload
+summary: Stream pipeline progress (SSE)
+description: >
+  Server-Sent Events stream of log lines for a running job, ending with a
+  `done` event carrying `{success, output_files}`. Not fully representable
+  in Swagger/OpenAPI 2.0 — documented here for discoverability only.
+produces:
+  - text/event-stream
+parameters:
+  - name: job_id
+    in: path
+    type: string
+    required: true
+    description: The job_id (process_id) returned by POST /upload.
+responses:
+  200:
+    description: SSE stream of `log` and `done` events
+  404:
+    description: Job not found

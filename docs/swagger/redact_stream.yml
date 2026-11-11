@@ -1,0 +1,27 @@
+tags:
+  - Redact API
+summary: Stream a redaction-request's progress and result (SSE)
+description: >
+  Server-Sent Events stream for a POST /api/redact call. Emits one
+  `file_done` event per completed file (payload: `{process_id, file_id,
+  file_name, status, values}` — self-contained, no need to correlate back to
+  the initial POST response), then a final `done` event carrying the full
+  result `{process_id, files: [...]}`. Each value entry is one of:
+  `{"status": "redacted", "category": ..., "token": ...}`,
+  `{"status": "not_found"}`, `{"status": "too_short"}`, or
+  `{"status": "error", "error": ...}` — a value already masked in that file
+  produces no entry at all (silent skip). Not fully representable in
+  Swagger/OpenAPI 2.0 — documented here for discoverability only.
+produces:
+  - text/event-stream
+parameters:
+  - name: process_id
+    in: path
+    type: string
+    required: true
+    description: The process_id returned by POST /api/redact.
+responses:
+  200:
+    description: SSE stream of `file_done` and `done` events
+  404:
+    description: Redaction job not found

@@ -1,0 +1,15 @@
+tags:
+  - Upload
+summary: Download a redacted output file
+parameters:
+  - name: filename
+    in: path
+    type: string
+    required: true
+produces:
+  - application/octet-stream
+responses:
+  200:
+    description: The redacted file
+  404:
+    description: File not found

@@ -1,0 +1,9 @@
+tags:
+  - Pages
+summary: Rehydrate UI page
+description: Renders the rehydration SPA shell.
+produces:
+  - text/html
+responses:
+  200:
+    description: HTML page

@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" version="24.0.0">
+  <diagram name="Data Model ERD" id="Data_Model_ERD">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c2" value="project (external, read-only)
+Pid (PK) · ClientName · ShortName · access" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=11;fontStyle=0;dashed=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="40" y="40" width="320" height="60" as="geometry" /></mxCell>
+        <mxCell id="c3" value="activity (external, read-only)
+Aid (PK) · Pid (FK) · jobdescription · Date" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=11;fontStyle=0;dashed=1;arcSize=8;" vertex="1" parent="1"><mxGeometry x="40" y="130" width="320" height="60" as="geometry" /></mxCell>
+        <mxCell id="c4" value="pii_client_codes
+pid (PK, = project.Pid)
+code (UK) · source" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=0;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="420" y="40" width="300" height="60" as="geometry" /></mxCell>
+        <mxCell id="c5" value="pii_id_sequences
+prefix (PK: FIL | PRC)
+next_value" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=0;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="420" y="130" width="300" height="60" as="geometry" /></mxCell>
+        <mxCell id="c6" value="pii_files
+file_id (PK) · process_id · process_name
+client_id (FK) · job_id (FK) · filename
+redacted_path · output_format
+original_encrypted_path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=11;fontStyle=0;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="40" y="250" width="340" height="110" as="geometry" /></mxCell>
+        <mxCell id="c7" value="pii_redaction_map
+id (PK) · client_id · job_id · process_id
+file_id (FK) · source_text (plaintext PII)
+redacted_text (token) · source
+(pipeline | manual | api)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=11;fontStyle=1;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="440" y="250" width="340" height="110" as="geometry" /></mxCell>
+        <mxCell id="c8" value="pii_categories
+id (PK) · name (UK)
+UI dropdown vocabulary only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;fontStyle=0;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="840" y="250" width="260" height="70" as="geometry" /></mxCell>
+        <mxCell id="c9" value="PII_redation_upload_log (standalone)
+id (PK) · uid · file_count · status
+input_file · output_file · uploaded_at · completed_on" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontSize=11;fontStyle=0;dashed=0;arcSize=8;" vertex="1" parent="1"><mxGeometry x="440" y="420" width="400" height="80" as="geometry" /></mxCell>
+        <mxCell id="c10" value="client_id" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=0;fontSize=9;" edge="1" parent="1" source="c2" target="c6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c11" value="job_id" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=0;fontSize=9;" edge="1" parent="1" source="c3" target="c6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c12" value="assigns a code" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=0;fontSize=9;" edge="1" parent="1" source="c2" target="c4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c13" value="mints file_id/process_id" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=9;" edge="1" parent="1" source="c5" target="c6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c14" value="file_id" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=0;fontSize=9;" edge="1" parent="1" source="c6" target="c7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="c15" value="category vocabulary
+(UI only)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;fontSize=9;" edge="1" parent="1" source="c8" target="c7"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
