@@ -7,7 +7,7 @@ module.exports = {
       name: "pii-redaction",
       script: "serve.py",
       // Linux venv (recreate on EC2: python3 -m venv pii_env && pii_env/bin/pip install -r requirements.txt)
-      interpreter: "./pii_env/bin/python",
+      interpreter: "./venv/bin/python",
       cwd: __dirname,
       env: {
         PORT: 5009, // read by serve.py; nginx proxies to this port
