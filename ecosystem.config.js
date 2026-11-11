@@ -6,8 +6,12 @@ module.exports = {
     {
       name: "pii-redaction",
       script: "serve.py",
-      interpreter: "./pii_env/Scripts/python.exe",
+      // Linux venv (recreate on EC2: python3 -m venv pii_env && pii_env/bin/pip install -r requirements.txt)
+      interpreter: "./pii_env/bin/python",
       cwd: __dirname,
+      env: {
+        PORT: 5009, // read by serve.py; nginx proxies to this port
+      },
       watch: false, // MUST stay false — this app writes/rewrites files as part of
       // normal operation (uploads, temp artifacts, redacted output) while a run is
       // in progress. If PM2 watched the working tree, that routine file activity

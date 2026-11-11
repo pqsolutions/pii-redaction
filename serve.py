@@ -20,7 +20,7 @@ from app import app
 
 if __name__ == "__main__":
     host = "0.0.0.0"
-    port = 5009
+    port = int(os.environ.get("PORT", 5009))
     try:
         _s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         _s.connect(("8.8.8.8", 80))
